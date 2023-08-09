@@ -262,6 +262,7 @@ namespace ScrapMode
         public void Awake()
         {
             InnitArtifact();
+            ConfigSetup();
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
             On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
@@ -269,7 +270,7 @@ namespace ScrapMode
 
         /// <summary>
         /// Setsup everything for the artifact and adds it to the artifact list
-        /// </summary>
+        /// </summary>    
         private void InnitArtifact()
         {
             myArtifact = ScriptableObject.CreateInstance<ArtifactDef>();
@@ -286,9 +287,17 @@ namespace ScrapMode
 
         private void ConfigSetup()
         {
+            Logger.LogInfo("starting config for scrap mode...");
+            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+            {
+                return;
+            }
+            Logger.LogInfo("Artifact on, start binding");
             InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 1f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
+            Logger.LogInfo("Count Multiplier binded");
             foreach (string key in Interactibles)
             {
+                Logger.LogInfo($"binding {key}!");
                 InteractibleToBind[key] = 
                     (
                     entry: base.Config.Bind<float>("Interactables", 
@@ -298,6 +307,8 @@ namespace ScrapMode
                     defaultValue: InteractibleToBind[key].defaultValue
                     );
             }
+
+            Logger.LogInfo("Config loaded!");
         }
 
         /// <summary>
@@ -347,15 +358,17 @@ namespace ScrapMode
         /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
-            self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(InteractibleCountMultiplier.Value, 0f, 100f));
-            WeightedSelection<DirectorCard> weightedSelection = orig.Invoke(self);
+            Logger.LogInfo("Started Generating Interactable CardSelection...");
+            self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(1f, 0f, 100f));
+            WeightedSelection<DirectorCard> weightedSelection = orig(self);
+            Logger.LogInfo("Called the original method for Generating Interactable CardSelection!");
 
             // Artifact is off
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
             {
                 return weightedSelection;
             }
-
+            Logger.LogInfo("Scrapmode Artifact is on!");
             for (int i = 0; i < weightedSelection.Count; i++)
             {
                 bool flag;
@@ -371,22 +384,27 @@ namespace ScrapMode
                 bool flag2 = flag;
                 if (flag2)
                 {
+                    Logger.LogInfo("Weighted selection exists!");
                     string name = weightedSelection.choices[i].value.spawnCard.name;
                     (ConfigEntry<float> entry, float defaultValue) bindEntry;
                     bool flag3 = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out bindEntry);
-                    if (flag3)
+                    Logger.LogInfo($"Current choice is: {name} Got found: {flag3}");
+                    Logger.LogInfo($"Bind entry: {bindEntry}");
+                    if (flag3)   
                     {
-                        bool flag4 = bindEntry.entry.Value < 0f;
-                        if (flag4)
-                        {
-                            bindEntry.entry.Value = 0f;
-                        }
+                    //    bool flag4 = bindEntry.entry.Value < 0f;
+                    //    if (flag4)
+                    //    {
+                    //        bindEntry.entry.Value = 0f;
+                    //    }
                         WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
                         int num = i;
-                        choices2[num].weight = choices2[num].weight * bindEntry.entry.Value;
+                        Logger.LogInfo($"Default value of {name} is {bindEntry.defaultValue}");
+                        choices2[num].weight = choices2[num].weight * bindEntry.defaultValue;
                     }
                 }
             }
+            Logger.LogInfo("Returning new weighted selection!");
             return weightedSelection;
         }
 
