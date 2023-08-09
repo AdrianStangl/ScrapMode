@@ -7,6 +7,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using BepInEx.Configuration;
+using System.Collections;
 
 namespace ScrapMode
 {
@@ -262,10 +263,11 @@ namespace ScrapMode
         public void Awake()
         {
             InnitArtifact();
-            ConfigSetup();
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
             On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
+            StartCoroutine(CheckForInitialization());        
+            
         }
 
         /// <summary>
@@ -285,9 +287,26 @@ namespace ScrapMode
             };
         }
 
+        private IEnumerator CheckForInitialization()
+        {
+            while (RunArtifactManager.instance == null)
+            {
+                Logger.LogInfo("Waiting for artifactmanager initialization...");
+                yield return new WaitForSeconds(1f);  // Wait half a second before checking again
+            }
+            ConfigSetup();
+        }
+
+        private IEnumerator WaitTillArtifactManagerInitialized()
+        {
+            while (RunArtifactManager.instance == null)
+            {
+                yield return new WaitForSeconds(1f);  // Wait half a second before checking again
+            }
+        }
+
         private void ConfigSetup()
         {
-            Logger.LogInfo("starting config for scrap mode...");
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
             {
                 return;
@@ -318,6 +337,7 @@ namespace ScrapMode
         /// <param name="self"></param>
         private void Run_BuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self)
         {
+            StartCoroutine(WaitTillArtifactManagerInitialized());
             orig(self);
             // Artifact is off
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
@@ -358,6 +378,8 @@ namespace ScrapMode
         /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
+            StartCoroutine(WaitTillArtifactManagerInitialized());
+
             Logger.LogInfo("Started Generating Interactable CardSelection...");
             self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(1f, 0f, 100f));
             WeightedSelection<DirectorCard> weightedSelection = orig(self);
