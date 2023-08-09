@@ -208,20 +208,34 @@ namespace ScrapMode
 
         public void Awake()
         {
+            InnitArtifact();
+
+            On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
+            On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
+        }
+
+        /// <summary>
+        /// Setsup everything for the artifact and adds it to the artifact list
+        /// </summary>
+        private void InnitArtifact()
+        {
             myArtifact = ScriptableObject.CreateInstance<ArtifactDef>();
             myArtifact.nameToken = "Scrapmode";
             myArtifact.descriptionToken = "A new gamemode. Collect scrap, print items";
             myArtifact.smallIconDeselectedSprite = LoadIcon(Properties.Resources.artifactDeselect);
             myArtifact.smallIconSelectedSprite = LoadIcon(Properties.Resources.artifactSelect);
 
-            ArtifactCatalog.getAdditionalEntries += (list) => {
+            ArtifactCatalog.getAdditionalEntries += (list) =>
+            {
                 list.Add(myArtifact);
             };
-
-            On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
-            On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
         }
 
+        /// <summary>
+        /// Puts the scrap on the correct drop table
+        /// </summary>
+        /// <param name="orig"></param>
+        /// <param name="self"></param>
         private void Run_BuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self)
         {
             orig(self);
@@ -258,6 +272,12 @@ namespace ScrapMode
             self.largeChestDropTierSelector.Clear();
         }
 
+        /// <summary>
+        /// Changes the weights of the interactables. Influences the amount of interactables spawned in the scene
+        /// </summary>
+        /// <param name="orig"></param>
+        /// <param name="self"></param>
+        /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
             self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(, 0f, 100f));
