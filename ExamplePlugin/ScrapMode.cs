@@ -405,5 +405,20 @@ namespace ScrapMode
 
             return Sprite.Create(iconTex, new Rect(0f, 0f, iconTex.width, iconTex.height), new Vector2(0.5f, 0.5f));
         }
+
+        /// <summary>
+        /// Sends <paramref name="message"/> into the chat
+        /// </summary>
+        /// <param name="message">The message to be sent</param>
+        private void SendChatMessage(string message)
+        {
+            if (NetworkUser.readOnlyInstancesList.Count > 0)
+            {
+                Chat.SendBroadcastChat(new Chat.SimpleChatMessage
+                {
+                    baseToken = message
+                });
+            }
+        }
     }
 }
