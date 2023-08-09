@@ -263,11 +263,10 @@ namespace ScrapMode
         public void Awake()
         {
             InnitArtifact();
+            ConfigSetup();
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
-            On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
-            StartCoroutine(CheckForInitialization());        
-            
+            On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;     
         }
 
         /// <summary>
@@ -287,16 +286,6 @@ namespace ScrapMode
             };
         }
 
-        private IEnumerator CheckForInitialization()
-        {
-            while (RunArtifactManager.instance == null)
-            {
-                Logger.LogInfo("Waiting for artifactmanager initialization...");
-                yield return new WaitForSeconds(1f);  // Wait half a second before checking again
-            }
-            ConfigSetup();
-        }
-
         private IEnumerator WaitTillArtifactManagerInitialized()
         {
             while (RunArtifactManager.instance == null)
@@ -307,6 +296,7 @@ namespace ScrapMode
 
         private void ConfigSetup()
         {
+            WaitTillArtifactManagerInitialized();
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
             {
                 return;
@@ -414,11 +404,11 @@ namespace ScrapMode
                     Logger.LogInfo($"Bind entry: {bindEntry}");
                     if (flag3)   
                     {
-                    //    bool flag4 = bindEntry.entry.Value < 0f;
-                    //    if (flag4)
-                    //    {
-                    //        bindEntry.entry.Value = 0f;
-                    //    }
+                        bool flag4 = bindEntry.entry.Value < 0f;
+                        if (flag4)
+                        {
+                            bindEntry.entry.Value = 0f;
+                        }
                         WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
                         int num = i;
                         Logger.LogInfo($"Default value of {name} is {bindEntry.defaultValue}");
