@@ -284,6 +284,22 @@ namespace ScrapMode
             };
         }
 
+        private void ConfigSetup()
+        {
+            InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 1f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
+            foreach (string key in Interactibles)
+            {
+                InteractibleToBind[key] = 
+                    (
+                    entry: base.Config.Bind<float>("Interactables", 
+                           InteractibleToLocalized[key], 
+                           InteractibleToBind[key].defaultValue, 
+                           new ConfigDescription($"Multiply the weighted chance to spawn a/an {InteractibleToLocalized[key]}.", null, Array.Empty<object>())),
+                    defaultValue: InteractibleToBind[key].defaultValue
+                    );
+            }
+        }
+
         /// <summary>
         /// Puts the scrap on the correct drop table
         /// </summary>
