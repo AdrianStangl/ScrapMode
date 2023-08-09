@@ -286,11 +286,15 @@ namespace ScrapMode
             };
         }
 
+        /// <summary>
+        /// Coroutine to Wait until the ArtifactManager is loaded to avoid timing issues
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator WaitTillArtifactManagerInitialized()
         {
             while (RunArtifactManager.instance == null)
             {
-                yield return new WaitForSeconds(1f);  // Wait half a second before checking again
+                yield return new WaitForSeconds(1f);  // Wait a second before checking again
             }
         }
 
