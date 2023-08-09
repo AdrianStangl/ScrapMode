@@ -211,6 +211,53 @@ namespace ScrapMode
             { "iscVoidCoinBarrel", (IscVoidCoinBarrel, 0.0f) }
         };
 
+        // Translate interactable name to readable name for config
+        private static readonly Dictionary<string, string> InteractibleToLocalized = new Dictionary<string, string>
+        {
+            {"iscChest1", "Small Chest"},
+            {"iscChest2", "Large Chest"},
+            {"iscChest1Stealthed", "Invisible Chest"},
+            {"iscCategoryChestDamage", "Damage Chest"},
+            {"iscCategoryChestHealing", "Healing Chest"},
+            {"iscCategoryChestUtility", "Utility Chest"},
+            {"iscCategoryChest2Damage", "Large Damage Chest"},
+            {"iscCategoryChest2Healing", "Large Healing Chest"},
+            {"iscCategoryChest2Utility", "Large Utility Chest"},
+            {"iscGoldChest", "Legendary Chest"},
+            {"iscTripleShop", "Common Triple Shop"},
+            {"iscTripleShopLarge", "Uncommon Triple Shop"},
+            {"iscTripleShopEquipment", "Triple Equipment Shop"},
+            {"iscCasinoChest", "Adaptive Chest"},
+            {"iscBarrel1", "Barrel"},
+            {"iscLunarChest", "Lunar Pod"},
+            {"iscEquipmentBarrel", "Equipment Barrel"},
+            {"iscScrapper", "Scrapper"},
+            {"iscRadarTower", "Radio Scanner"},
+            {"iscDuplicator", "Common 3D Printer"},
+            {"iscDuplicatorLarge", "Uncommon 3D Printer"},
+            {"iscDuplicatorWild", "Overgrown 3D Printer"},
+            {"iscDuplicatorMilitary", "Mili-Tech Printer"},
+            {"iscBrokenTurret1", "Gunner Turret"},
+            {"iscBrokenDrone1", "Gunner Drone"},
+            {"iscBrokenDrone2", "Healing Drone"},
+            {"iscBrokenEmergencyDrone", "Emergency Drone"},
+            {"iscBrokenMissileDrone", "Missile Drone"},
+            {"iscBrokenEquipmentDrone", "Equipment Drone"},
+            {"iscBrokenFlameDrone", "Incinerator Drone"},
+            {"iscBrokenMegaDrone", "TC-280 Prototype"},
+            {"iscShrineChance", "Shrine of Chance"},
+            {"iscShrineCombat", "Shrine of Combat"},
+            {"iscShrineBlood", "Shrine of Blood"},
+            {"iscShrineBoss", "Shrine of the Mountain"},
+            {"iscShrineHealing", "Shrine of the Woods"},
+            {"iscShrineRestack", "Shrine of Order"},
+            {"iscShrineGoldshoresAccess", "Altar of Gold"},
+            {"iscShrineCleanse", "Cleansing Pool"},
+            {"iscVoidCamp", "Void Seed"},
+            {"iscVoidChest", "Void Cradle"},
+            {"iscVoidTriple", "Void Potential"},
+            {"iscVoidCoinBarrel", "Void Stalk"}
+        };
 
         public void Awake()
         {
