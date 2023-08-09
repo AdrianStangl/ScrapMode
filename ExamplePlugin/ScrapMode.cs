@@ -306,7 +306,7 @@ namespace ScrapMode
                 return;
             }
             Logger.LogInfo("Artifact on, start binding");
-            InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 1f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
+            InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 2f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
             Logger.LogInfo("Count Multiplier binded");
             foreach (string key in Interactibles)
             {
