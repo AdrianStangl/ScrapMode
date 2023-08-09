@@ -372,18 +372,18 @@ namespace ScrapMode
                 if (flag2)
                 {
                     string name = weightedSelection.choices[i].value.spawnCard.name;
-                    ConfigEntry<float> configEntry;
-                    bool flag3 = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out configEntry);
+                    (ConfigEntry<float> entry, float defaultValue) bindEntry;
+                    bool flag3 = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out bindEntry);
                     if (flag3)
                     {
-                        bool flag4 = configEntry.Value < 0f;
+                        bool flag4 = bindEntry.entry.Value < 0f;
                         if (flag4)
                         {
-                            configEntry.Value = 0f;
+                            bindEntry.entry.Value = 0f;
                         }
                         WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
                         int num = i;
-                        choices2[num].weight = choices2[num].weight * configEntry.Value;
+                        choices2[num].weight = choices2[num].weight * bindEntry.entry.Value;
                     }
                 }
             }
