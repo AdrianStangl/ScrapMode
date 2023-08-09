@@ -275,13 +275,18 @@ namespace ScrapMode
         /// <summary>
         /// Changes the weights of the interactables. Influences the amount of interactables spawned in the scene
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
         /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
-            self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(, 0f, 100f));
+            self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(InteractibleCountMultiplier.Value, 0f, 100f));
             WeightedSelection<DirectorCard> weightedSelection = orig.Invoke(self);
+
+            // Artifact is off
+            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+            {
+                return weightedSelection;
+            }
+
             for (int i = 0; i < weightedSelection.Count; i++)
             {
                 bool flag;
@@ -320,7 +325,7 @@ namespace ScrapMode
         /// Loads a Unity Sprite from resources.
         /// </summary>
         /// <param name="resourceBytes">The byte array of the resource.</param>
-        /// <returns></returns>
+        /// <returns>The converted sprite</returns>
         private Sprite LoadIcon(Byte[] resourceBytes)
         {
             if (resourceBytes == null)
