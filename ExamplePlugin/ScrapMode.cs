@@ -155,55 +155,61 @@ namespace ScrapMode
             "iscVoidCoinBarrel"
         };
 
-        // Dict holding ConfigEntry to an interactable name
-        public static Dictionary<string, ConfigEntry<float>> InteractibleToBind = new Dictionary<string, ConfigEntry<float>>()
-    {
-        { "iscChest1", IscChest1 },
-        { "iscChest2", IscChest2 },
-        { "iscChest1Stealthed", IscChest1Stealthed },
-        { "iscCategoryChestDamage", IscCategoryChestDamage },
-        { "iscCategoryChestHealing", IscCategoryChestHealing },
-        { "iscCategoryChestUtility", IscCategoryChestUtility },
-        { "iscCategoryChest2Damage", IscCategoryChest2Damage },
-        { "iscCategoryChest2Healing", IscCategoryChest2Healing },
-        { "iscCategoryChest2Utility", IscCategoryChest2Utility },
-        { "iscGoldChest", IscGoldChest },
-        { "iscTripleShop", IscTripleShop },
-        { "iscTripleShopLarge", IscTripleShopLarge },
-        { "iscTripleShopEquipment", IscTripleShopEquipment },
-        { "iscCasinoChest", IscCasinoChest },
-        { "iscBarrel1", IscBarrel1 },
-        { "iscLunarChest", IscLunarChest },
-        { "iscEquipmentBarrel", IscEquipmentBarrel },
-        { "iscScrapper", IscScrapper },
-        { "iscRadarTower", IscRadarTower },
-        { "iscDuplicator", IscDuplicator },
-        { "iscDuplicatorLarge", IscDuplicatorLarge },
-        { "iscDuplicatorWild", IscDuplicatorWild },
-        { "iscDuplicatorMilitary", IscDuplicatorMilitary },
-        { "iscBrokenTurret1", IscBrokenTurret1 },
-        { "iscBrokenDrone1", IscBrokenDrone1 },
-        { "iscBrokenDrone2", IscBrokenDrone2 },
-        { "iscBrokenEmergencyDrone", IscBrokenEmergencyDrone },
-        { "iscBrokenMissileDrone", IscBrokenMissileDrone },
-        { "iscBrokenEquipmentDrone", IscBrokenEquipmentDrone },
-        { "iscBrokenFlameDrone", IscBrokenFlameDrone },
-        { "iscBrokenMegaDrone", IscBrokenMegaDrone },
-        { "iscShrineChance", IscShrineChance },
-        { "iscShrineCombat", IscShrineCombat },
-        { "iscShrineBlood", IscShrineBlood },
-        { "iscShrineBoss", IscShrineBoss },
-        { "iscShrineHealing", IscShrineHealing },
-        { "iscShrineRestack", IscShrineRestack },
-        { "iscShrineGoldshoresAccess", IscShrineGoldshoresAccess },
-        { "iscShrineCleanse", IscShrineCleanse },
-        { "iscVoidCamp", IscVoidCamp },
-        { "iscVoidChest", IscVoidChest },
-        { "iscVoidTriple", IscVoidTriple },
-        { "iscVoidCoinBarrel", IscVoidCoinBarrel }
-    };
-
-
+        // Dict holding ConfigEntry and default value for an interactable name
+        public static Dictionary<string, (ConfigEntry<float> entry, float defaultValue)> InteractibleToBind = new Dictionary<string, (ConfigEntry<float> entry, float defaultValue)>()
+        {
+            // Chests
+            { "iscChest1", (IscChest1, 1.0f) },
+            { "iscChest2", (IscChest2, 1.0f) },
+            { "iscChest1Stealthed", (IscChest1Stealthed, 0.0f) },
+            { "iscCategoryChestDamage", (IscCategoryChestDamage, 0.0f) },
+            { "iscCategoryChestHealing", (IscCategoryChestHealing, 0.0f) },
+            { "iscCategoryChestUtility", (IscCategoryChestUtility, 0.0f) },
+            { "iscCategoryChest2Damage", (IscCategoryChest2Damage, 0.0f) },
+            { "iscCategoryChest2Healing", (IscCategoryChest2Healing, 0.0f) },
+            { "iscCategoryChest2Utility", (IscCategoryChest2Utility, 0.0f) },
+            { "iscGoldChest", (IscGoldChest, 1.0f) },
+            // Shops
+            { "iscTripleShop", (IscTripleShop, 0.0f) },
+            { "iscTripleShopLarge", (IscTripleShopLarge, 0.0f) },
+            { "iscTripleShopEquipment", (IscTripleShopEquipment, 0.0f) },
+            // Addaptive chest
+            { "iscCasinoChest", (IscCasinoChest, 1.0f) },
+            // Barrell
+            { "iscBarrel1", (IscBarrel1, 1.0f) },
+            // Misc
+            { "iscLunarChest", (IscLunarChest, 1.0f) },
+            { "iscEquipmentBarrel", (IscEquipmentBarrel, 1.0f) },
+            { "iscScrapper", (IscScrapper, 1.0f) },
+            { "iscRadarTower", (IscRadarTower, 1.0f) },
+            // Printer
+            { "iscDuplicator", (IscDuplicator, 1.0f) },
+            { "iscDuplicatorLarge", (IscDuplicatorLarge, 1.0f) },
+            { "iscDuplicatorWild", (IscDuplicatorWild, 1.0f) },
+            { "iscDuplicatorMilitary", (IscDuplicatorMilitary, 1.0f) },
+            // Drones
+            { "iscBrokenTurret1", (IscBrokenTurret1, 1.0f) },
+            { "iscBrokenDrone1", (IscBrokenDrone1, 1.0f) },
+            { "iscBrokenDrone2", (IscBrokenDrone2, 1.0f) },
+            { "iscBrokenEmergencyDrone", (IscBrokenEmergencyDrone, 1.0f) },
+            { "iscBrokenMissileDrone", (IscBrokenMissileDrone, 1.0f) },
+            { "iscBrokenEquipmentDrone", (IscBrokenEquipmentDrone, 1.0f) },
+            { "iscBrokenFlameDrone", (IscBrokenFlameDrone, 1.0f) },
+            { "iscBrokenMegaDrone", (IscBrokenMegaDrone, 1.0f) },
+            // Shrines
+            { "iscShrineChance", (IscShrineChance, 0.0f) },
+            { "iscShrineCombat", (IscShrineCombat, 0.0f) },
+            { "iscShrineBlood", (IscShrineBlood, 0.0f) },
+            { "iscShrineBoss", (IscShrineBoss, 1.5f) },
+            { "iscShrineHealing", (IscShrineHealing, 0.0f) },
+            { "iscShrineRestack", (IscShrineRestack, 0.0f) },
+            { "iscShrineGoldshoresAccess", (IscShrineGoldshoresAccess, 0.0f) },
+            { "iscShrineCleanse", (IscShrineCleanse, 0.0f) },
+            { "iscVoidCamp", (IscVoidCamp, 0.0f) },
+            { "iscVoidChest", (IscVoidChest, 0.0f) },
+            { "iscVoidTriple", (IscVoidTriple, 0.0f) },
+            { "iscVoidCoinBarrel", (IscVoidCoinBarrel, 0.0f) }
+        };
 
 
         public void Awake()
