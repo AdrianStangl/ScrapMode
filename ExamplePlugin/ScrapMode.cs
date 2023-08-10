@@ -114,6 +114,7 @@ namespace ScrapMode
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
             On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
+            On.RoR2.BossGroup.DropRewards += BossGroup_DropRewards;
         }
 
         /// <summary>
@@ -151,17 +152,14 @@ namespace ScrapMode
             ItemIndex whiteScrap = RoR2Content.Items.ScrapWhite.itemIndex;
             ItemIndex greenScrap = RoR2Content.Items.ScrapGreen.itemIndex;
             ItemIndex redScrap = RoR2Content.Items.ScrapRed.itemIndex;
-            ItemIndex yellowScrap = RoR2Content.Items.ScrapYellow.itemIndex;
 
             // Add only scrap to the propper Item Tier list
             self.availableTier1DropList.Clear();
             self.availableTier2DropList.Clear();
             self.availableTier3DropList.Clear();
-            self.availableBossDropList.Clear();
             self.availableTier1DropList.Add(PickupCatalog.FindPickupIndex(whiteScrap));
             self.availableTier2DropList.Add(PickupCatalog.FindPickupIndex(greenScrap));
             self.availableTier3DropList.Add(PickupCatalog.FindPickupIndex(redScrap));
-            self.availableBossDropList.Add(PickupCatalog.FindPickupIndex(yellowScrap));
 
             // Add the list to the chests with its probabilities
             self.smallChestDropTierSelector.Clear();
@@ -172,6 +170,23 @@ namespace ScrapMode
             self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.8f);
             self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.2f);
             self.largeChestDropTierSelector.Clear();
+        }
+
+
+        private void BossGroup_DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup self)
+        {
+            ItemIndex yellowScrap = RoR2Content.Items.ScrapYellow.itemIndex;
+            self.bossDrops.Clear();
+            self.bossDrops.Add(PickupCatalog.FindPickupIndex(yellowScrap));
+            self.bossDropTables.Clear();
+            orig(self);
+            Logger.LogInfo($"boss drop tables: {self.bossDropTables}");
+            foreach(var item in self.bossDropTables)
+                Logger.LogInfo($"Pickupdroptable in bossdroptable: {item}");
+
+            foreach(var item in self.bossDrops)
+                Logger.LogInfo($"boss drop in bossDrops: {item}");
+
         }
 
         /// <summary>
