@@ -114,6 +114,7 @@ namespace ScrapMode
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
             On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
+            On.RoR2.ChestBehavior.ItemDrop += ChestBehavior_ItemDrop;
             On.RoR2.BossGroup.DropRewards += BossGroup_DropRewards;
         }
 
@@ -172,6 +173,32 @@ namespace ScrapMode
             self.largeChestDropTierSelector.Clear();
         }
 
+        private void ChestBehavior_ItemDrop(On.RoR2.ChestBehavior.orig_ItemDrop orig, ChestBehavior self)
+        {
+            // Artifact is off
+            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+            {
+                orig(self);
+                return;
+            }
+            PickupIndex item = self.dropPickup;
+            
+            self.dropPickup = GetScrapForDropPickupTier(item);
+            orig(self);
+        }
+
+        private PickupIndex GetScrapForDropPickupTier(PickupIndex item)
+        {
+            ItemTier tier = PickupCatalog.GetPickupDef(item).itemTier;
+            return tier switch
+            {
+                ItemTier.Tier1 => PickupCatalog.FindPickupIndex(RoR2Content.Items.ScrapWhite.itemIndex),
+                ItemTier.Tier2 => PickupCatalog.FindPickupIndex(RoR2Content.Items.ScrapGreen.itemIndex),
+                ItemTier.Tier3 => PickupCatalog.FindPickupIndex(RoR2Content.Items.ScrapRed.itemIndex),
+                ItemTier.Boss => PickupCatalog.FindPickupIndex(RoR2Content.Items.ScrapYellow.itemIndex),
+                _ => item
+            };
+        }
 
         private void BossGroup_DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup self)
         {
