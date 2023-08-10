@@ -50,68 +50,7 @@ namespace ScrapMode
         private static ArtifactDef myArtifact;
 
         // Multiply the TOTAL number of spawnable interactibles.
-        public static ConfigEntry<float> InteractibleCountMultiplier { get; set; }
-
-        // Config Entries for every item
-        #region INTERACTABLECONFIGS
-        public static ConfigEntry<float> IscChest1 { get; set; }
-
-        public static ConfigEntry<float> IscChest2 { get; set; }
-
-        public static ConfigEntry<float> IscChest1Stealthed { get; set; }
-
-        public static ConfigEntry<float> IscCategoryChestDamage { get; set; }
-
-        public static ConfigEntry<float> IscCategoryChestHealing { get; set; }
-
-        public static ConfigEntry<float> IscCategoryChestUtility { get; set; }
-
-        public static ConfigEntry<float> IscCategoryChest2Damage { get; set; }
-
-        public static ConfigEntry<float> IscCategoryChest2Healing { get; set; }
-
-        public static ConfigEntry<float> IscCategoryChest2Utility { get; set; }
-
-        public static ConfigEntry<float> IscGoldChest { get; set; }
-
-        public static ConfigEntry<float> IscTripleShop { get; set; }
-
-        public static ConfigEntry<float> IscTripleShopLarge { get; set; }
-        public static ConfigEntry<float> IscTripleShopEquipment { get; set; }
-        public static ConfigEntry<float> IscCasinoChest { get; set; }
-        public static ConfigEntry<float> IscBarrel1 { get; set; }
-        public static ConfigEntry<float> IscLunarChest { get; set; }
-        public static ConfigEntry<float> IscEquipmentBarrel { get; set; }
-        public static ConfigEntry<float> IscScrapper { get; set; }
-        public static ConfigEntry<float> IscRadarTower { get; set; }
-        public static ConfigEntry<float> IscDuplicator { get; set; }
-        public static ConfigEntry<float> IscDuplicatorLarge { get; set; }
-        public static ConfigEntry<float> IscDuplicatorWild { get; set; }
-        public static ConfigEntry<float> IscDuplicatorMilitary { get; set; }
-        public static ConfigEntry<float> IscBrokenTurret1 { get; set; }
-        public static ConfigEntry<float> IscBrokenDrone1 { get; set; }
-        public static ConfigEntry<float> IscBrokenDrone2 { get; set; }
-        public static ConfigEntry<float> IscBrokenEmergencyDrone { get; set; }
-        public static ConfigEntry<float> IscBrokenMissileDrone { get; set; }
-        public static ConfigEntry<float> IscBrokenEquipmentDrone { get; set; }
-        public static ConfigEntry<float> IscBrokenFlameDrone { get; set; }
-        public static ConfigEntry<float> IscBrokenMegaDrone { get; set; }
-        public static ConfigEntry<float> IscShrineChance { get; set; }
-        public static ConfigEntry<float> IscShrineCombat { get; set; }
-        public static ConfigEntry<float> IscShrineBlood { get; set; }
-        public static ConfigEntry<float> IscShrineBoss { get; set; }
-        public static ConfigEntry<float> IscShrineHealing { get; set; }
-        public static ConfigEntry<float> IscShrineRestack { get; set; }
-        public static ConfigEntry<float> IscShrineGoldshoresAccess { get; set; }
-        public static ConfigEntry<float> IscShrineCleanse { get; set; }
-        public static ConfigEntry<float> IscVoidCamp { get; set; }
-        public static ConfigEntry<float> IscVoidChest { get; set; }
-        public static ConfigEntry<float> IscVoidTriple { get; set; }
-        public static ConfigEntry<float> IscVoidCoinBarrel { get; set; }
-        #endregion INTERACTABLECONFIGS
-
-        // True after every config has been binded and loaded
-        public bool IsConfigLoaded { get; set; } = false;
+        public static float InteractibleCountMultiplier { get; set; } = 2f;
 
         private static readonly List<string> Interactibles = new List<string>
         {
@@ -160,107 +99,59 @@ namespace ScrapMode
         };
 
         // Dict holding ConfigEntry and default value for an interactable name
-        public static Dictionary<string, (ConfigEntry<float> entry, float defaultValue)> InteractibleToBind = new Dictionary<string, (ConfigEntry<float> entry, float defaultValue)>()
+        public static Dictionary<string, float> InteractibleToBind = new Dictionary<string, float>()
         {
             // Chests
-            { "iscChest1", (IscChest1, 1.0f) },
-            { "iscChest2", (IscChest2, 1.0f) },
-            { "iscChest1Stealthed", (IscChest1Stealthed, 0.0f) },
-            { "iscCategoryChestDamage", (IscCategoryChestDamage, 0.0f) },
-            { "iscCategoryChestHealing", (IscCategoryChestHealing, 0.0f) },
-            { "iscCategoryChestUtility", (IscCategoryChestUtility, 0.0f) },
-            { "iscCategoryChest2Damage", (IscCategoryChest2Damage, 0.0f) },
-            { "iscCategoryChest2Healing", (IscCategoryChest2Healing, 0.0f) },
-            { "iscCategoryChest2Utility", (IscCategoryChest2Utility, 0.0f) },
-            { "iscGoldChest", (IscGoldChest, 1.0f) },
+            { "iscChest1",  1.0f},
+            { "iscChest2",  1.0f},
+            { "iscChest1Stealthed",  0.0f},
+            { "iscCategoryChestDamage",  0.0f},
+            { "iscCategoryChestHealing",  0.0f},
+            { "iscCategoryChestUtility",  0.0f},
+            { "iscCategoryChest2Damage",  0.0f},
+            { "iscCategoryChest2Healing",  0.0f},
+            { "iscCategoryChest2Utility",  0.0f},
+            { "iscGoldChest",  1.0f},
             // Shops
-            { "iscTripleShop", (IscTripleShop, 0.0f) },
-            { "iscTripleShopLarge", (IscTripleShopLarge, 0.0f) },
-            { "iscTripleShopEquipment", (IscTripleShopEquipment, 0.0f) },
+            { "iscTripleShop", 0.0f},
+            { "iscTripleShopLarge", 0.0f},
+            { "iscTripleShopEquipment", 0.0f},
             // Addaptive chest
-            { "iscCasinoChest", (IscCasinoChest, 1.0f) },
+            { "iscCasinoChest", 1.0f},
             // Barrell
-            { "iscBarrel1", (IscBarrel1, 1.0f) },
+            { "iscBarrel1", 1.0f},
             // Misc
-            { "iscLunarChest", (IscLunarChest, 1.0f) },
-            { "iscEquipmentBarrel", (IscEquipmentBarrel, 1.0f) },
-            { "iscScrapper", (IscScrapper, 1.0f) },
-            { "iscRadarTower", (IscRadarTower, 1.0f) },
+            { "iscLunarChest", 1.0f},
+            { "iscEquipmentBarrel", 1.0f},
+            { "iscScrapper", 1.0f},
+            { "iscRadarTower", 1.0f},
             // Printer
-            { "iscDuplicator", (IscDuplicator, 1.0f) },
-            { "iscDuplicatorLarge", (IscDuplicatorLarge, 1.0f) },
-            { "iscDuplicatorWild", (IscDuplicatorWild, 1.0f) },
-            { "iscDuplicatorMilitary", (IscDuplicatorMilitary, 1.0f) },
+            { "iscDuplicator", 1.0f},
+            { "iscDuplicatorLarge", 1.0f},
+            { "iscDuplicatorWild", 1.0f},
+            { "iscDuplicatorMilitary", 1.0f},
             // Drones
-            { "iscBrokenTurret1", (IscBrokenTurret1, 1.0f) },
-            { "iscBrokenDrone1", (IscBrokenDrone1, 1.0f) },
-            { "iscBrokenDrone2", (IscBrokenDrone2, 1.0f) },
-            { "iscBrokenEmergencyDrone", (IscBrokenEmergencyDrone, 1.0f) },
-            { "iscBrokenMissileDrone", (IscBrokenMissileDrone, 1.0f) },
-            { "iscBrokenEquipmentDrone", (IscBrokenEquipmentDrone, 1.0f) },
-            { "iscBrokenFlameDrone", (IscBrokenFlameDrone, 1.0f) },
-            { "iscBrokenMegaDrone", (IscBrokenMegaDrone, 1.0f) },
+            { "iscBrokenTurret1", 1.0f},
+            { "iscBrokenDrone1", 1.0f},
+            { "iscBrokenDrone2", 1.0f},
+            { "iscBrokenEmergencyDrone", 1.0f},
+            { "iscBrokenMissileDrone", 1.0f},
+            { "iscBrokenEquipmentDrone", 1.0f},
+            { "iscBrokenFlameDrone", 1.0f},
+            { "iscBrokenMegaDrone", 1.0f},
             // Shrines
-            { "iscShrineChance", (IscShrineChance, 0.0f) },
-            { "iscShrineCombat", (IscShrineCombat, 0.0f) },
-            { "iscShrineBlood", (IscShrineBlood, 0.0f) },
-            { "iscShrineBoss", (IscShrineBoss, 1.5f) },
-            { "iscShrineHealing", (IscShrineHealing, 0.0f) },
-            { "iscShrineRestack", (IscShrineRestack, 0.0f) },
-            { "iscShrineGoldshoresAccess", (IscShrineGoldshoresAccess, 0.0f) },
-            { "iscShrineCleanse", (IscShrineCleanse, 0.0f) },
-            { "iscVoidCamp", (IscVoidCamp, 0.0f) },
-            { "iscVoidChest", (IscVoidChest, 0.0f) },
-            { "iscVoidTriple", (IscVoidTriple, 0.0f) },
-            { "iscVoidCoinBarrel", (IscVoidCoinBarrel, 0.0f) }
-        };
-
-        // Translate interactable name to readable name for config
-        private static readonly Dictionary<string, string> InteractibleToLocalized = new Dictionary<string, string>
-        {
-            {"iscChest1", "Small Chest"},
-            {"iscChest2", "Large Chest"},
-            {"iscChest1Stealthed", "Invisible Chest"},
-            {"iscCategoryChestDamage", "Damage Chest"},
-            {"iscCategoryChestHealing", "Healing Chest"},
-            {"iscCategoryChestUtility", "Utility Chest"},
-            {"iscCategoryChest2Damage", "Large Damage Chest"},
-            {"iscCategoryChest2Healing", "Large Healing Chest"},
-            {"iscCategoryChest2Utility", "Large Utility Chest"},
-            {"iscGoldChest", "Legendary Chest"},
-            {"iscTripleShop", "Common Triple Shop"},
-            {"iscTripleShopLarge", "Uncommon Triple Shop"},
-            {"iscTripleShopEquipment", "Triple Equipment Shop"},
-            {"iscCasinoChest", "Adaptive Chest"},
-            {"iscBarrel1", "Barrel"},
-            {"iscLunarChest", "Lunar Pod"},
-            {"iscEquipmentBarrel", "Equipment Barrel"},
-            {"iscScrapper", "Scrapper"},
-            {"iscRadarTower", "Radio Scanner"},
-            {"iscDuplicator", "Common 3D Printer"},
-            {"iscDuplicatorLarge", "Uncommon 3D Printer"},
-            {"iscDuplicatorWild", "Overgrown 3D Printer"},
-            {"iscDuplicatorMilitary", "Mili-Tech Printer"},
-            {"iscBrokenTurret1", "Gunner Turret"},
-            {"iscBrokenDrone1", "Gunner Drone"},
-            {"iscBrokenDrone2", "Healing Drone"},
-            {"iscBrokenEmergencyDrone", "Emergency Drone"},
-            {"iscBrokenMissileDrone", "Missile Drone"},
-            {"iscBrokenEquipmentDrone", "Equipment Drone"},
-            {"iscBrokenFlameDrone", "Incinerator Drone"},
-            {"iscBrokenMegaDrone", "TC-280 Prototype"},
-            {"iscShrineChance", "Shrine of Chance"},
-            {"iscShrineCombat", "Shrine of Combat"},
-            {"iscShrineBlood", "Shrine of Blood"},
-            {"iscShrineBoss", "Shrine of the Mountain"},
-            {"iscShrineHealing", "Shrine of the Woods"},
-            {"iscShrineRestack", "Shrine of Order"},
-            {"iscShrineGoldshoresAccess", "Altar of Gold"},
-            {"iscShrineCleanse", "Cleansing Pool"},
-            {"iscVoidCamp", "Void Seed"},
-            {"iscVoidChest", "Void Cradle"},
-            {"iscVoidTriple", "Void Potential"},
-            {"iscVoidCoinBarrel", "Void Stalk"}
+            { "iscShrineChance", 0.0f},
+            { "iscShrineCombat", 0.0f},
+            { "iscShrineBlood", 0.0f},
+            { "iscShrineBoss", 1.5f},
+            { "iscShrineHealing", 0.0f},
+            { "iscShrineRestack", 0.0f},
+            { "iscShrineGoldshoresAccess", 0.0f},
+            { "iscShrineCleanse", 0.0f},
+            { "iscVoidCamp", 0.0f},
+            { "iscVoidChest", 0.0f},
+            { "iscVoidTriple", 0.0f},
+            { "iscVoidCoinBarrel", 0.0f}
         };
 
         public void Awake()
@@ -269,8 +160,6 @@ namespace ScrapMode
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
             On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
-
-            ConfigSetup();
         }
 
         /// <summary>
@@ -291,75 +180,12 @@ namespace ScrapMode
         }
 
         /// <summary>
-        /// Coroutine to Wait until the ArtifactManager is loaded to avoid timing issues
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator WaitTillArtifactManagerInitialized()
-        {
-            while (RunArtifactManager.instance == null)
-            {
-                Logger.LogInfo("waiting for artifact manager....");
-                yield return new WaitForSeconds(1f);  // Wait a second before checking again
-            }
-        }
-
-        /// <summary>
-        /// Coroutine to Wait until the configs are loaded to avoid timing issues
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator WaitTillConfigsLoaded()
-        {
-            while (!IsConfigLoaded && RunArtifactManager.instance == null)
-            {
-                Logger.LogInfo("waiting for config....");
-                yield return new WaitForSeconds(1f);  // Wait a second before checking again
-            }
-        }
-
-        private void ConfigSetup()
-        {
-            StartCoroutine(WaitTillArtifactManagerInitialized());
-            try
-            {
-                if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
-                {
-                    return;
-                }
-                Logger.LogInfo("Artifact on, start binding");
-                InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 2f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
-                Logger.LogInfo("Count Multiplier binded");
-                foreach (string key in Interactibles)
-                {
-                    Logger.LogInfo($"binding {key}!");
-                    InteractibleToBind[key] =
-                        (
-                        entry: base.Config.Bind<float>("Interactables",
-                               InteractibleToLocalized[key],
-                               InteractibleToBind[key].defaultValue,
-                               new ConfigDescription($"Multiply the weighted chance to spawn a/an {InteractibleToLocalized[key]}.", null, Array.Empty<object>())),
-                        defaultValue: InteractibleToBind[key].defaultValue
-                        );
-                }
-                Logger.LogInfo("Config loaded!");
-            }
-            catch (Exception e)
-            {
-                Logger.LogInfo($"[ERROR] {e}");
-            }
-            finally
-            {
-                IsConfigLoaded = true;
-            }
-        }
-
-        /// <summary>
         /// Puts the scrap on the correct drop table
         /// </summary>
         /// <param name="orig"></param>
         /// <param name="self"></param>
         private void Run_BuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self)
         {
-            StartCoroutine(WaitTillConfigsLoaded());
             orig(self);
             // Artifact is off
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
@@ -400,11 +226,8 @@ namespace ScrapMode
         /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
-            StartCoroutine(WaitTillConfigsLoaded());
-
             Logger.LogInfo("Started Generating Interactable CardSelection...");
-            Logger.LogInfo($"Config is loaded: {IsConfigLoaded}");
-            self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(1f, 0f, 100f));
+            self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(InteractibleCountMultiplier, 0f, 100f));
             WeightedSelection<DirectorCard> weightedSelection = orig(self);
             Logger.LogInfo("Called the original method for Generating Interactable CardSelection!");
 
@@ -420,19 +243,17 @@ namespace ScrapMode
 
                 Logger.LogInfo("Weighted selection exists!");
                 string name = weightedSelection.choices[i].value.spawnCard.name;
-                (ConfigEntry<float> entry, float defaultValue) bindEntry;
-                bool bindForInteractableExists = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out bindEntry);
-                Logger.LogInfo($"Current choice is: {name} Got found: {bindForInteractableExists}");
-                Logger.LogInfo($"Bind entry: {bindEntry}");
-
-                if (bindForInteractableExists)
+                float value;
+                bool entryExists = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out value);
+                Logger.LogInfo($"Current choice is: {name} Got found: {entryExists}");
+                if (entryExists)
                 {
-                    if (bindEntry.entry.Value < 0f)
-                        bindEntry.entry.Value = 0f;
+                    if (value < 0f) 
+                        value = 0f;
 
                     WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
-                    Logger.LogInfo($"value of {name} is {bindEntry.defaultValue}");
-                    choices2[i].weight = choices2[i].weight * bindEntry.defaultValue;
+                    Logger.LogInfo($"value of {name} is {value}");
+                    choices2[i].weight = choices2[i].weight * value;
                 }
             }
             Logger.LogInfo("Returning new weighted selection!");
