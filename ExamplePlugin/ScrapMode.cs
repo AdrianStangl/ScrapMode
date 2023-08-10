@@ -112,7 +112,6 @@ namespace ScrapMode
         {
             InnitArtifact();
 
-            On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
             On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
             On.RoR2.ChestBehavior.ItemDrop += ChestBehavior_ItemDrop;
             On.RoR2.BossGroup.DropRewards += BossGroup_DropRewards;
@@ -133,44 +132,6 @@ namespace ScrapMode
             {
                 list.Add(myArtifact);
             };
-        }
-
-        /// <summary>
-        /// Puts the scrap on the correct drop table
-        /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        private void Run_BuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self)
-        {
-            orig(self);
-            // Artifact is off
-            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
-            {
-                return;
-            }
-
-            // Store the scrap Itemindexes of all classes
-            ItemIndex whiteScrap = RoR2Content.Items.ScrapWhite.itemIndex;
-            ItemIndex greenScrap = RoR2Content.Items.ScrapGreen.itemIndex;
-            ItemIndex redScrap = RoR2Content.Items.ScrapRed.itemIndex;
-
-            // Add only scrap to the propper Item Tier list
-            self.availableTier1DropList.Clear();
-            self.availableTier2DropList.Clear();
-            self.availableTier3DropList.Clear();
-            self.availableTier1DropList.Add(PickupCatalog.FindPickupIndex(whiteScrap));
-            self.availableTier2DropList.Add(PickupCatalog.FindPickupIndex(greenScrap));
-            self.availableTier3DropList.Add(PickupCatalog.FindPickupIndex(redScrap));
-
-            // Add the list to the chests with its probabilities
-            self.smallChestDropTierSelector.Clear();
-            self.smallChestDropTierSelector.AddChoice(self.availableTier1DropList, 0.8f);
-            self.smallChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.2f);
-            self.smallChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.01f);
-            self.mediumChestDropTierSelector.Clear();
-            self.mediumChestDropTierSelector.AddChoice(self.availableTier2DropList, 0.8f);
-            self.mediumChestDropTierSelector.AddChoice(self.availableTier3DropList, 0.2f);
-            self.largeChestDropTierSelector.Clear();
         }
 
         private void ChestBehavior_ItemDrop(On.RoR2.ChestBehavior.orig_ItemDrop orig, ChestBehavior self)
