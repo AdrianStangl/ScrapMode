@@ -110,6 +110,9 @@ namespace ScrapMode
         public static ConfigEntry<float> IscVoidCoinBarrel { get; set; }
         #endregion INTERACTABLECONFIGS
 
+        // True after every config has been binded and loaded
+        public bool IsConfigLoaded { get; set; }
+
         private static readonly List<string> Interactibles = new List<string>
         {
             "iscChest1",
@@ -263,10 +266,11 @@ namespace ScrapMode
         public void Awake()
         {
             InnitArtifact();
-            ConfigSetup();
 
             On.RoR2.Run.BuildDropTable += Run_BuildDropTable;
-            On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;     
+            On.RoR2.SceneDirector.GenerateInteractableCardSelection += SceneDirector_GenerateInteractableCardSelection;
+
+            ConfigSetup();
         }
 
         /// <summary>
@@ -294,34 +298,58 @@ namespace ScrapMode
         {
             while (RunArtifactManager.instance == null)
             {
+                Logger.LogInfo("waiting....");
+                yield return new WaitForSeconds(1f);  // Wait a second before checking again
+            }
+        }
+
+        /// <summary>
+        /// Coroutine to Wait until the ArtifactManager is loaded to avoid timing issues
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator WaitTillConfigsLoaded()
+        {
+            while (!IsConfigLoaded)
+            {
+                Logger.LogInfo("waiting....");
                 yield return new WaitForSeconds(1f);  // Wait a second before checking again
             }
         }
 
         private void ConfigSetup()
         {
-            WaitTillArtifactManagerInitialized();
-            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+            StartCoroutine(WaitTillArtifactManagerInitialized());
+            try
             {
-                return;
+                if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+                {
+                    return;
+                }
+                Logger.LogInfo("Artifact on, start binding");
+                InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 2f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
+                Logger.LogInfo("Count Multiplier binded");
+                foreach (string key in Interactibles)
+                {
+                    Logger.LogInfo($"binding {key}!");
+                    InteractibleToBind[key] =
+                        (
+                        entry: base.Config.Bind<float>("Interactables",
+                               InteractibleToLocalized[key],
+                               InteractibleToBind[key].defaultValue,
+                               new ConfigDescription($"Multiply the weighted chance to spawn a/an {InteractibleToLocalized[key]}.", null, Array.Empty<object>())),
+                        defaultValue: InteractibleToBind[key].defaultValue
+                        );
+                }
+                Logger.LogInfo("Config loaded!");
             }
-            Logger.LogInfo("Artifact on, start binding");
-            InteractibleCountMultiplier = base.Config.Bind<float>("!General", "Count multiplier", 2f, new ConfigDescription("Multiply the TOTAL number of spawnable interactibles. (Capped at 100).", null, Array.Empty<object>()));
-            Logger.LogInfo("Count Multiplier binded");
-            foreach (string key in Interactibles)
+            catch (Exception e)
             {
-                Logger.LogInfo($"binding {key}!");
-                InteractibleToBind[key] = 
-                    (
-                    entry: base.Config.Bind<float>("Interactables", 
-                           InteractibleToLocalized[key], 
-                           InteractibleToBind[key].defaultValue, 
-                           new ConfigDescription($"Multiply the weighted chance to spawn a/an {InteractibleToLocalized[key]}.", null, Array.Empty<object>())),
-                    defaultValue: InteractibleToBind[key].defaultValue
-                    );
+                Logger.LogError(e);
             }
-
-            Logger.LogInfo("Config loaded!");
+            finally
+            {
+                IsConfigLoaded = true;
+            }
         }
 
         /// <summary>
@@ -331,7 +359,7 @@ namespace ScrapMode
         /// <param name="self"></param>
         private void Run_BuildDropTable(On.RoR2.Run.orig_BuildDropTable orig, Run self)
         {
-            StartCoroutine(WaitTillArtifactManagerInitialized());
+            StartCoroutine(WaitTillConfigsLoaded());
             orig(self);
             // Artifact is off
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
@@ -372,7 +400,7 @@ namespace ScrapMode
         /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
-            StartCoroutine(WaitTillArtifactManagerInitialized());
+            StartCoroutine(WaitTillConfigsLoaded());
 
             Logger.LogInfo("Started Generating Interactable CardSelection...");
             self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(1f, 0f, 100f));
@@ -384,40 +412,26 @@ namespace ScrapMode
             {
                 return weightedSelection;
             }
-            Logger.LogInfo("Scrapmode Artifact is on!");
             for (int i = 0; i < weightedSelection.Count; i++)
             {
-                bool flag;
                 if (weightedSelection == null)
+                    return weightedSelection;
+
+                Logger.LogInfo("Weighted selection exists!");
+                string name = weightedSelection.choices[i].value.spawnCard.name;
+                (ConfigEntry<float> entry, float defaultValue) bindEntry;
+                bool bindForInteractableExists = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out bindEntry);
+                Logger.LogInfo($"Current choice is: {name} Got found: {bindForInteractableExists}");
+                Logger.LogInfo($"Bind entry: {bindEntry}");
+
+                if (bindForInteractableExists)
                 {
-                    flag = false;
-                }
-                else
-                {
-                    WeightedSelection<DirectorCard>.ChoiceInfo[] choices = weightedSelection.choices;
-                    flag = true;
-                }
-                bool flag2 = flag;
-                if (flag2)
-                {
-                    Logger.LogInfo("Weighted selection exists!");
-                    string name = weightedSelection.choices[i].value.spawnCard.name;
-                    (ConfigEntry<float> entry, float defaultValue) bindEntry;
-                    bool flag3 = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out bindEntry);
-                    Logger.LogInfo($"Current choice is: {name} Got found: {flag3}");
-                    Logger.LogInfo($"Bind entry: {bindEntry}");
-                    if (flag3)   
-                    {
-                        bool flag4 = bindEntry.entry.Value < 0f;
-                        if (flag4)
-                        {
-                            bindEntry.entry.Value = 0f;
-                        }
-                        WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
-                        int num = i;
-                        Logger.LogInfo($"Default value of {name} is {bindEntry.defaultValue}");
-                        choices2[num].weight = choices2[num].weight * bindEntry.defaultValue;
-                    }
+                    if (bindEntry.entry.Value < 0f)
+                        bindEntry.entry.Value = 0f;
+
+                    WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
+                    Logger.LogInfo($"value of {name} is {bindEntry.defaultValue}");
+                    choices2[i].weight = choices2[i].weight * bindEntry.defaultValue;
                 }
             }
             Logger.LogInfo("Returning new weighted selection!");
