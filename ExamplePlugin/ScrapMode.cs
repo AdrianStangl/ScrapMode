@@ -212,14 +212,82 @@ namespace ScrapMode
             self.bossDrops.Clear();
             self.bossDrops.Add(PickupCatalog.FindPickupIndex(yellowScrap));
             self.bossDropTables.Clear();
-            orig(self);
-            Logger.LogInfo($"boss drop tables: {self.bossDropTables}");
-            foreach(var item in self.bossDropTables)
-                Logger.LogInfo($"Pickupdroptable in bossdroptable: {item}");
+            //orig(self);
+            //Logger.LogInfo($"boss drop tables: {self.bossDropTables}");
+            //foreach(var item in self.bossDropTables)
+            //    Logger.LogInfo($"Pickupdroptable in bossdroptable: {item}");
 
-            foreach(var item in self.bossDrops)
-                Logger.LogInfo($"boss drop in bossDrops: {item}");
+            //foreach(var item in self.bossDrops)
+            //    Logger.LogInfo($"boss drop in bossDrops: {item}");
 
+            // Original game code
+            if (!Run.instance)
+            {
+                Debug.LogError("No valid run instance!");
+                return;
+            }
+            if (self.rng == null)
+            {
+                Debug.LogError("RNG is null!");
+                return;
+            }
+            int participatingPlayerCount = Run.instance.participatingPlayerCount;
+            if (participatingPlayerCount != 0)
+            {
+                if (self.dropPosition)
+                {
+                    PickupIndex pickupIndex = PickupIndex.none;    // The normal roll of the game
+                    if (self.dropTable)
+                    {
+                        pickupIndex = self.dropTable.GenerateDrop(self.rng);
+                    }
+                    else
+                    {
+                        List<PickupIndex> list = Run.instance.availableTier2DropList;
+                        if (self.forceTier3Reward)
+                        {
+                            list = Run.instance.availableTier3DropList;
+                        }
+                        pickupIndex = self.rng.NextElementUniform<PickupIndex>(list);
+                    }
+                    pickupIndex = GetScrapForDropPickupTier(pickupIndex);  // Replace it with scrap
+                    int num = 1 + self.bonusRewardCount;
+                    if (self.scaleRewardsByPlayerCount)
+                    {
+                        num *= participatingPlayerCount;
+                    }
+                    float angle = 360f / (float)num;
+                    Vector3 vector = Quaternion.AngleAxis((float)UnityEngine.Random.Range(0, 360), Vector3.up) * (Vector3.up * 40f + Vector3.forward * 5f);
+                    Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
+                    bool flag = self.bossDrops != null && self.bossDrops.Count > 0;
+                    bool flag2 = self.bossDropTables != null && self.bossDropTables.Count > 0;
+                    int i = 0;
+                    while (i < num)
+                    {
+                        PickupIndex pickupIndex2 = pickupIndex;
+                        if (self.bossDrops != null && ((flag || flag2) && self.rng.nextNormalizedFloat <= self.bossDropChance))
+                        {
+                            if (flag2)
+                            {
+                                PickupDropTable pickupDropTable = self.rng.NextElementUniform<PickupDropTable>(self.bossDropTables);
+                                if (pickupDropTable != null)
+                                {
+                                    pickupIndex2 = pickupDropTable.GenerateDrop(self.rng);
+                                }
+                            }
+                            else
+                            {
+                                pickupIndex2 = self.rng.NextElementUniform<PickupIndex>(self.bossDrops);
+                            }
+                        }
+                        PickupDropletController.CreatePickupDroplet(pickupIndex2, self.dropPosition.position, vector);
+                        i++;
+                        vector = rotation * vector;
+                    }
+                    return;
+                }
+                Debug.LogWarning("dropPosition not set for BossGroup! No item will be spawned.");
+            }
         }
 
         /// <summary>
