@@ -173,13 +173,6 @@ namespace ScrapMode
             self.bossDrops.Clear();
             self.bossDrops.Add(PickupCatalog.FindPickupIndex(yellowScrap));
             self.bossDropTables.Clear();
-            //orig(self);
-            //Logger.LogInfo($"boss drop tables: {self.bossDropTables}");
-            //foreach(var item in self.bossDropTables)
-            //    Logger.LogInfo($"Pickupdroptable in bossdroptable: {item}");
-
-            //foreach(var item in self.bossDrops)
-            //    Logger.LogInfo($"boss drop in bossDrops: {item}");
 
             // Original game code
             if (!Run.instance)
