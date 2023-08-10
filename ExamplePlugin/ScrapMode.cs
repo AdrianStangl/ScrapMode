@@ -175,6 +175,12 @@ namespace ScrapMode
 
         private void BossGroup_DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup self)
         {
+            // Artifact is off
+            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+            {
+                orig(self);
+                return;
+            }
             ItemIndex yellowScrap = RoR2Content.Items.ScrapYellow.itemIndex;
             self.bossDrops.Clear();
             self.bossDrops.Add(PickupCatalog.FindPickupIndex(yellowScrap));
@@ -195,15 +201,15 @@ namespace ScrapMode
         /// <returns>Returns the weighted selection card deck with the new weights</returns>
         private WeightedSelection<DirectorCard> SceneDirector_GenerateInteractableCardSelection(On.RoR2.SceneDirector.orig_GenerateInteractableCardSelection orig, SceneDirector self)
         {
+            // Artifact is off
+            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
+            {
+                return orig(self);
+            }
             Logger.LogInfo("Started Generating Interactable CardSelection...");
             self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(InteractibleCountMultiplier, 0f, 100f));
             WeightedSelection<DirectorCard> weightedSelection = orig(self);
 
-            // Artifact is off
-            if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
-            {
-                return weightedSelection;
-            }
             for (int i = 0; i < weightedSelection.Count; i++)
             {
                 if (weightedSelection == null)
