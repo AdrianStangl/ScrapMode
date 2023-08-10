@@ -50,53 +50,7 @@ namespace ScrapMode
         private static ArtifactDef myArtifact;
 
         // Multiply the TOTAL number of spawnable interactibles.
-        public static float InteractibleCountMultiplier { get; set; } = 2f;
-
-        private static readonly List<string> Interactibles = new List<string>
-        {
-            "iscChest1",
-            "iscChest2",
-            "iscChest1Stealthed",
-            "iscCategoryChestDamage",
-            "iscCategoryChestHealing",
-            "iscCategoryChestUtility",
-            "iscCategoryChest2Damage",
-            "iscCategoryChest2Healing",
-            "iscCategoryChest2Utility",
-            "iscGoldChest",
-            "iscTripleShop",
-            "iscTripleShopLarge",
-            "iscTripleShopEquipment",
-            "iscCasinoChest",
-            "iscBarrel1",
-            "iscLunarChest",
-            "iscEquipmentBarrel",
-            "iscScrapper",
-            "iscRadarTower",
-            "iscDuplicator",
-            "iscDuplicatorLarge",
-            "iscDuplicatorWild",
-            "iscDuplicatorMilitary",
-            "iscBrokenTurret1",
-            "iscBrokenDrone1",
-            "iscBrokenDrone2",
-            "iscBrokenEmergencyDrone",
-            "iscBrokenMissileDrone",
-            "iscBrokenEquipmentDrone",
-            "iscBrokenFlameDrone",
-            "iscBrokenMegaDrone",
-            "iscShrineChance",
-            "iscShrineCombat",
-            "iscShrineBlood",
-            "iscShrineBoss",
-            "iscShrineHealing",
-            "iscShrineRestack",
-            "iscShrineGoldshoresAccess",
-            "iscShrineCleanse",
-            "iscVoidCamp",
-            "iscVoidChest",
-            "iscVoidCoinBarrel"
-        };
+        public static float InteractibleCountMultiplier { get; set; } = 3f;
 
         // Dict holding ConfigEntry and default value for an interactable name
         public static Dictionary<string, float> InteractibleToBind = new Dictionary<string, float>()
@@ -229,7 +183,6 @@ namespace ScrapMode
             Logger.LogInfo("Started Generating Interactable CardSelection...");
             self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(InteractibleCountMultiplier, 0f, 100f));
             WeightedSelection<DirectorCard> weightedSelection = orig(self);
-            Logger.LogInfo("Called the original method for Generating Interactable CardSelection!");
 
             // Artifact is off
             if (!RunArtifactManager.instance.IsArtifactEnabled(myArtifact))
@@ -241,19 +194,17 @@ namespace ScrapMode
                 if (weightedSelection == null)
                     return weightedSelection;
 
-                Logger.LogInfo("Weighted selection exists!");
                 string name = weightedSelection.choices[i].value.spawnCard.name;
-                float value;
-                bool entryExists = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out value);
+                bool entryExists = InteractibleToBind.TryGetValue(name.Replace("Sandy", "").Replace("Snowy", ""), out float dictValue);
                 Logger.LogInfo($"Current choice is: {name} Got found: {entryExists}");
                 if (entryExists)
                 {
-                    if (value < 0f) 
-                        value = 0f;
+                    if (dictValue < 0f) 
+                        dictValue = 0f;
 
                     WeightedSelection<DirectorCard>.ChoiceInfo[] choices2 = weightedSelection.choices;
-                    Logger.LogInfo($"value of {name} is {value}");
-                    choices2[i].weight = choices2[i].weight * value;
+                    Logger.LogInfo($"value of {name} is {dictValue}");
+                    choices2[i].weight = choices2[i].weight * dictValue;
                 }
             }
             Logger.LogInfo("Returning new weighted selection!");
