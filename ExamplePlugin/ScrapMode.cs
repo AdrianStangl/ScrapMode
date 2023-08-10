@@ -134,6 +134,12 @@ namespace ScrapMode
             };
         }
 
+        /// <summary>
+        /// Hook that changes how items drop
+        /// Takes the pickupindex that is set in the game code and converts the rolled drop 
+        /// to its scrap counterpart with the same rarity
+        /// and drops the item
+        /// </summary>
         private void ChestBehavior_ItemDrop(On.RoR2.ChestBehavior.orig_ItemDrop orig, ChestBehavior self)
         {
             // Artifact is off
@@ -148,6 +154,12 @@ namespace ScrapMode
             orig(self);
         }
 
+        /// <summary>
+        /// Takes a PickupIndex and converts it to its scrap counterpart
+        /// If that doesnt work, return same PickupIndex
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>Returns the scrap of the same rarity of <paramref name="item"/></returns>
         private PickupIndex GetScrapForDropPickupTier(PickupIndex item)
         {
             ItemTier tier = PickupCatalog.GetPickupDef(item).itemTier;
@@ -161,6 +173,11 @@ namespace ScrapMode
             };
         }
 
+        /// <summary>
+        /// Manages the Drops from the teleporter
+        /// replaces bossdrops with yellow scrap
+        /// replaces green items with green scrap
+        /// </summary>
         private void BossGroup_DropRewards(On.RoR2.BossGroup.orig_DropRewards orig, BossGroup self)
         {
             // Artifact is off
