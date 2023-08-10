@@ -111,7 +111,7 @@ namespace ScrapMode
         #endregion INTERACTABLECONFIGS
 
         // True after every config has been binded and loaded
-        public bool IsConfigLoaded { get; set; }
+        public bool IsConfigLoaded { get; set; } = false;
 
         private static readonly List<string> Interactibles = new List<string>
         {
@@ -298,20 +298,20 @@ namespace ScrapMode
         {
             while (RunArtifactManager.instance == null)
             {
-                Logger.LogInfo("waiting....");
+                Logger.LogInfo("waiting for artifact manager....");
                 yield return new WaitForSeconds(1f);  // Wait a second before checking again
             }
         }
 
         /// <summary>
-        /// Coroutine to Wait until the ArtifactManager is loaded to avoid timing issues
+        /// Coroutine to Wait until the configs are loaded to avoid timing issues
         /// </summary>
         /// <returns></returns>
         private IEnumerator WaitTillConfigsLoaded()
         {
-            while (!IsConfigLoaded)
+            while (!IsConfigLoaded && RunArtifactManager.instance == null)
             {
-                Logger.LogInfo("waiting....");
+                Logger.LogInfo("waiting for config....");
                 yield return new WaitForSeconds(1f);  // Wait a second before checking again
             }
         }
@@ -344,7 +344,7 @@ namespace ScrapMode
             }
             catch (Exception e)
             {
-                Logger.LogError(e);
+                Logger.LogInfo($"[ERROR] {e}");
             }
             finally
             {
@@ -403,6 +403,7 @@ namespace ScrapMode
             StartCoroutine(WaitTillConfigsLoaded());
 
             Logger.LogInfo("Started Generating Interactable CardSelection...");
+            Logger.LogInfo($"Config is loaded: {IsConfigLoaded}");
             self.interactableCredit = (int)((float)self.interactableCredit * Mathf.Clamp(1f, 0f, 100f));
             WeightedSelection<DirectorCard> weightedSelection = orig(self);
             Logger.LogInfo("Called the original method for Generating Interactable CardSelection!");
