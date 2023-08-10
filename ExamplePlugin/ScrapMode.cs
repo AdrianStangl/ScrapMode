@@ -80,10 +80,10 @@ namespace ScrapMode
             { "iscScrapper", 1.0f},
             { "iscRadarTower", 1.0f},
             // Printer
-            { "iscDuplicator", 1.0f},
-            { "iscDuplicatorLarge", 1.0f},
-            { "iscDuplicatorWild", 1.0f},
-            { "iscDuplicatorMilitary", 1.0f},
+            { "iscDuplicator", 2.0f},
+            { "iscDuplicatorLarge", 2.0f},
+            { "iscDuplicatorWild", 2.0f},
+            { "iscDuplicatorMilitary", 2.0f},
             // Drones
             { "iscBrokenTurret1", 1.0f},
             { "iscBrokenDrone1", 1.0f},
