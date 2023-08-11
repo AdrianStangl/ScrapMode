@@ -23,7 +23,7 @@ The choice is yours!
 3. Drop the `.dll` file into your `BepInEx\plugins` directory.
 4. Boot up RoR2 and scrap away!
 
-Or alternatively use a modloader like r2modman and just import the dll into your mod profile
+Or alternatively use a modloader like r2modman and just import the dll into your mod profile.
 
 ---
 
@@ -69,5 +69,5 @@ Feel like enhancing the mod? Contributions are very welcome! Just fork the repo 
 ## ❤️ Credits
 
 - **Hopoo Games** - For creating Risk of Rain 2.
-- **ROR2 Modding Discord** For helping getting started 
+- **ROR2 Modding Discord** For their help in getting started. 
 
