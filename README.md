@@ -19,8 +19,8 @@ The choice is yours!
 ## 📥 Installation
 
 1. Make sure you have [BepInEx](https://github.com/BepInEx/BepInEx) installed.
-2. [Download the latest release](#) from this repo.
-3. Drop the `.dll` file into your `BepInEx\plugins` directory.
+2. [Download the latest release of ScrapMode](#) from this repo.
+3. Drop the `ScrapMode.dll` file into your `BepInEx\plugins` directory.
 4. Boot up RoR2 and scrap away!
 
 Or alternatively use a modloader like r2modman and just import the dll into your mod profile.
